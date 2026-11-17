@@ -12,67 +12,135 @@
 <body>
   <div id="cargando" class="cargando"><div class="anillo"></div><span>Cargando el sistema solar…</span></div>
 
+  <div id="capaConst" class="etiquetas constelaciones" aria-hidden="true"></div>
   <div id="etiquetas" class="etiquetas" aria-hidden="true"></div>
 
-  <h1 class="marca">SISTEMA SOLAR</h1>
+  <h1 class="marca ui" id="marca">SISTEMA SOLAR</h1>
 
-  <!-- Barra superior: búsqueda y distancia -->
-  <div class="barra-sup panel">
+  <!-- Barra superior: búsqueda, distancia y fecha -->
+  <div class="barra-sup panel ui">
     <label class="buscar">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       <input id="buscar" type="search" placeholder="Buscar" autocomplete="off" aria-label="Buscar un cuerpo celeste">
       <ul id="sugerencias" class="sugerencias" hidden></ul>
     </label>
     <div class="dist"><span>Distancia al Sol</span><b id="distValor">—</b><small id="distUnidad"></small></div>
+    <div class="dist fecha-sup"><span id="fechaEtiqueta">Fecha</span><b id="fechaSup">—</b></div>
   </div>
 
-  <!-- Panel izquierdo: controles -->
-  <aside id="panelIzq" class="panel panel-izq">
-    <button id="btnVista" class="fila-btn">
-      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-      VISTA GENERAL
-    </button>
+  <!-- Panel izquierdo -->
+  <aside id="panelIzq" class="panel panel-izq ui">
+    <!-- Controles del sistema solar -->
+    <div id="secSistema">
+      <div class="fila-dos">
+        <button id="btnVista" class="fila-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          VISTA GENERAL
+        </button>
+        <button id="btnGalaxia" class="fila-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 12c3-5 9-3 8 1-1 5-9 7-13 3-3-3-1-9 4-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>
+          VÍA LÁCTEA
+        </button>
+      </div>
 
-    <div class="seccion">
-      <div class="seccion-tit"><span>TIEMPO</span><b id="velTexto">1x</b></div>
-      <div class="rejilla4" id="velocidades">
-        <button data-v="0" title="Pausa">❚❚</button>
-        <button data-v="0.1">0.1x</button>
-        <button data-v="1" class="activo">1x</button>
-        <button data-v="5">5x</button>
-        <button data-v="20">20x</button>
-        <button data-v="50">50x</button>
-        <button data-v="100">100x</button>
-        <button data-v="-1" title="Invertir el sentido">⇄</button>
+      <div class="seccion">
+        <div class="seccion-tit"><span>TIEMPO</span><b id="velTexto">1 semana / s</b></div>
+        <div class="rejilla4" id="velocidades">
+          <button data-v="0" title="Pausa (barra espaciadora)">❚❚</button>
+          <button data-v="0.0416667">1 h/s</button>
+          <button data-v="1">1 día/s</button>
+          <button data-v="7" class="activo">1 sem/s</button>
+          <button data-v="30.4375">1 mes/s</button>
+          <button data-v="365.25">1 año/s</button>
+          <button data-v="3652.5">10 a/s</button>
+          <button data-v="-1" title="Invertir el sentido del tiempo">⇄</button>
+        </div>
+        <div class="fila-fecha">
+          <input id="fechaInput" type="date" aria-label="Ir a una fecha" min="1800-01-01" max="2100-12-31">
+          <button id="btnHoy" class="chico">Hoy</button>
+        </div>
+        <p id="avisoFecha" class="nota" hidden>Fuera de 1800–2050 las posiciones pierden precisión.</p>
+      </div>
+
+      <div class="seccion">
+        <div class="seccion-tit"><span>ESCALA DE DISTANCIAS</span></div>
+        <div class="rejilla2" id="escalas">
+          <button data-e="0" class="activo">COMPACTA</button>
+          <button data-e="1">REAL</button>
+        </div>
+        <p class="nota" id="notaEscala">Órbitas con su forma, inclinación y orientación reales; distancias acortadas para que todo quepa.</p>
+      </div>
+
+      <div class="seccion">
+        <div class="seccion-tit"><span>BRILLO DEL SOL</span><b id="solTexto">1.9</b></div>
+        <input id="solBrillo" type="range" min="1" max="6" step="0.1" value="1.9" aria-label="Brillo del Sol">
+      </div>
+
+      <div class="seccion">
+        <div class="seccion-tit"><span>MOSTRAR EN LA ESCENA</span></div>
+        <div class="toggles">
+          <button class="toggle activo" data-t="orbitas">ÓRBITAS</button>
+          <button class="toggle activo" data-t="nombres">NOMBRES</button>
+          <button class="toggle activo" data-t="asteroides">ASTEROIDES</button>
+          <button class="toggle activo" data-t="lunas">LUNAS</button>
+          <button class="toggle" data-t="constelaciones">CONSTELACIONES</button>
+          <button class="toggle" data-t="ejes">EJES DE ROTACIÓN</button>
+          <button class="toggle" data-t="giro">GIRO AUTOMÁTICO</button>
+          <button class="toggle activo" data-t="brillo">RESPLANDOR</button>
+        </div>
+      </div>
+
+      <div class="seccion">
+        <div class="seccion-tit"><span>ÍNDICE DE OBJETOS</span></div>
+        <ul id="indice" class="indice"></ul>
       </div>
     </div>
 
-    <div class="seccion">
-      <div class="seccion-tit"><span>BRILLO DEL SOL</span><b id="solTexto">1.9</b></div>
-      <input id="solBrillo" type="range" min="1" max="6" step="0.1" value="1.9" aria-label="Brillo del Sol">
-    </div>
-
-    <div class="seccion">
-      <div class="seccion-tit"><span>MOSTRAR EN LA ESCENA</span></div>
-      <div class="toggles">
-        <button class="toggle activo" data-t="orbitas">ÓRBITAS</button>
-        <button class="toggle activo" data-t="nombres">NOMBRES</button>
-        <button class="toggle activo" data-t="asteroides">ASTEROIDES</button>
-        <button class="toggle activo" data-t="lunas">LUNAS</button>
-        <button class="toggle" data-t="giro">GIRO AUTOMÁTICO</button>
-        <button class="toggle activo" data-t="brillo">RESPLANDOR</button>
+    <!-- Controles de la Vía Láctea -->
+    <div id="secGalaxia" hidden>
+      <button id="btnVolverSistema" class="fila-btn">← VOLVER AL SISTEMA SOLAR</button>
+      <div class="seccion">
+        <div class="seccion-tit"><span>VISTAS</span></div>
+        <div class="lista-vistas" id="vistasGal">
+          <button data-g="galaxia" class="activo"><b>La galaxia completa</b><small>Brazos, barra central y la órbita del Sol</small></button>
+          <button data-g="sol"><b>El Sol en su brazo</b><small>Sigue al Sol en su vuelta alrededor del centro</small></button>
+          <button data-g="helice"><b>La hélice de los planetas</b><small>Cómo avanza el sistema solar por el espacio</small></button>
+        </div>
+      </div>
+      <div class="seccion" id="tiempoGal">
+        <div class="seccion-tit"><span>TIEMPO GALÁCTICO</span><b id="velGalTexto">10 Ma / s</b></div>
+        <div class="rejilla4" id="velGal">
+          <button data-v="0">❚❚</button>
+          <button data-v="1">1 Ma/s</button>
+          <button data-v="10" class="activo">10 Ma/s</button>
+          <button data-v="50">50 Ma/s</button>
+        </div>
+        <p class="nota" id="tiempoGalTexto">Hoy</p>
+      </div>
+      <div class="seccion" id="tiempoHelice" hidden>
+        <div class="seccion-tit"><span>AÑOS POR SEGUNDO</span><b id="velHelTexto">1 año / s</b></div>
+        <div class="rejilla4" id="velHel">
+          <button data-v="0">❚❚</button>
+          <button data-v="0.25">¼</button>
+          <button data-v="1" class="activo">1</button>
+          <button data-v="5">5</button>
+        </div>
+        <div class="toggles una">
+          <button class="toggle" id="velReal">VELOCIDAD REAL DEL SOL</button>
+        </div>
+        <p class="nota" id="notaHelice">Velocidad del Sol reducida 30 veces para que se vean las vueltas. Con la velocidad real (≈ 230 km/s, unas 48 UA por año) las hélices quedan casi rectas.</p>
       </div>
     </div>
 
-    <div class="seccion">
-      <div class="seccion-tit"><span>ÍNDICE DE OBJETOS</span></div>
-      <ul id="indice" class="indice"></ul>
-    </div>
+    <details class="creditos">
+      <summary>Créditos y fuentes</summary>
+      <p>Proyecto base: <a href="https://github.com/ingibanezcarrasco/Solar-System-3D" target="_blank" rel="noopener">Solar-System-3D</a> (MIT). Órbitas: elementos keplerianos de JPL (Standish). Polos de rotación: IAU. Estrellas y constelaciones: d3-celestial (BSD-3-Clause, Olaf Frohn). Fotografías históricas: Wikimedia Commons; cada una indica autor y licencia.</p>
+    </details>
   </aside>
-  <button id="plegar" class="panel plegar" aria-label="Plegar panel" title="Plegar panel">‹</button>
+  <button id="plegar" class="panel plegar ui" aria-label="Plegar panel" title="Plegar panel">‹</button>
 
-  <!-- Panel derecho: ficha del cuerpo -->
-  <aside id="ficha" class="panel ficha" hidden>
+  <!-- Ficha -->
+  <aside id="ficha" class="panel ficha ui" hidden>
     <div class="ficha-cab">
       <span id="fichaMini"></span>
       <button id="fichaCerrar" class="icono" aria-label="Cerrar ficha">✕</button>
@@ -83,13 +151,32 @@
       <p id="fichaDesc" class="desc"></p>
       <h3>De un vistazo</h3>
       <dl id="fichaDatos" class="datos"></dl>
+      <div id="fichaVivo" class="vivo"></div>
       <div id="fichaExtra"></div>
+      <div id="fichaCapas" class="capas"></div>
+      <div id="fichaGaleria" class="galeria-sec"></div>
     </div>
     <button id="fichaVolver" class="volver">← Volver a la vista general</button>
   </aside>
 
+  <!-- Visor de fotos -->
+  <div id="visor" class="visor" hidden>
+    <button class="visor-cerrar icono" id="visorCerrar" aria-label="Cerrar">✕</button>
+    <button class="visor-nav ant" id="visorAnt" aria-label="Anterior">‹</button>
+    <figure>
+      <img id="visorImg" alt="">
+      <figcaption>
+        <span class="anio" id="visorAnio"></span>
+        <b id="visorTitulo"></b>
+        <p id="visorDesc"></p>
+        <small id="visorCredito"></small>
+      </figcaption>
+    </figure>
+    <button class="visor-nav sig" id="visorSig" aria-label="Siguiente">›</button>
+  </div>
+
   <!-- Navegador inferior -->
-  <div class="nav-inf">
+  <div class="nav-inf ui">
     <div class="panel navegador">
       <button id="anterior" aria-label="Anterior">‹</button>
       <span id="navNombre">Sistema solar</span>
@@ -99,9 +186,13 @@
       <span><kbd>ARRASTRAR</kbd> Girar</span>
       <span><kbd>RUEDA</kbd> Zoom</span>
       <span><kbd>CLIC</kbd> Seleccionar</span>
-      <span class="solo-pc"><kbd>← →</kbd> Cambiar</span>
+      <span class="solo-pc"><kbd>H</kbd> Ocultar interfaz</span>
     </div>
   </div>
+
+  <button id="btnUI" class="panel btn-ui" title="Ocultar la interfaz (H)" aria-label="Ocultar la interfaz">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path id="tachado" d="M4 4l16 16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+  </button>
 
   <script type="module" src="./script.js"></script>
 </body>

@@ -31,7 +31,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '4,879 km (0.38 × Tierra)'],
       ['Masa', '3.30 × 10²³ kg (0.055 × Tierra)'],
-      ['Distancia al Sol', '57.9 M km (0.39 UA)'],
+      ['Distancia media al Sol', '57.9 M km (0.39 UA)'],
       ['Año (órbita)', '88 días terrestres'],
       ['Rotación', '58.6 días terrestres'],
       ['Inclinación del eje', '0.03°'],
@@ -47,7 +47,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '12,104 km (0.95 × Tierra)'],
       ['Masa', '4.87 × 10²⁴ kg (0.815 × Tierra)'],
-      ['Distancia al Sol', '108.2 M km (0.72 UA)'],
+      ['Distancia media al Sol', '108.2 M km (0.72 UA)'],
       ['Año (órbita)', '224.7 días terrestres'],
       ['Rotación', '243 días, en sentido contrario'],
       ['Inclinación del eje', '177.4°'],
@@ -64,7 +64,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '12,742 km'],
       ['Masa', '5.97 × 10²⁴ kg'],
-      ['Distancia al Sol', '149.6 M km (1 UA)'],
+      ['Distancia media al Sol', '149.6 M km (1 UA)'],
       ['Año (órbita)', '365.25 días'],
       ['Rotación', '23 h 56 min'],
       ['Inclinación del eje', '23.4°'],
@@ -80,7 +80,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '6,779 km (0.53 × Tierra)'],
       ['Masa', '6.42 × 10²³ kg (0.107 × Tierra)'],
-      ['Distancia al Sol', '227.9 M km (1.52 UA)'],
+      ['Distancia media al Sol', '227.9 M km (1.52 UA)'],
       ['Año (órbita)', '687 días terrestres'],
       ['Rotación', '24 h 37 min'],
       ['Inclinación del eje', '25.2°'],
@@ -96,7 +96,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '139,820 km (11 × Tierra)'],
       ['Masa', '1.898 × 10²⁷ kg (318 × Tierra)'],
-      ['Distancia al Sol', '778.5 M km (5.20 UA)'],
+      ['Distancia media al Sol', '778.5 M km (5.20 UA)'],
       ['Año (órbita)', '11.86 años terrestres'],
       ['Rotación', '9 h 56 min'],
       ['Inclinación del eje', '3.1°'],
@@ -112,7 +112,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '116,460 km (9.1 × Tierra)'],
       ['Masa', '5.68 × 10²⁶ kg (95 × Tierra)'],
-      ['Distancia al Sol', '1,433.5 M km (9.58 UA)'],
+      ['Distancia media al Sol', '1,433.5 M km (9.58 UA)'],
       ['Año (órbita)', '29.45 años terrestres'],
       ['Rotación', '10 h 33 min'],
       ['Inclinación del eje', '26.7°'],
@@ -129,7 +129,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '50,724 km (4 × Tierra)'],
       ['Masa', '8.68 × 10²⁵ kg (14.5 × Tierra)'],
-      ['Distancia al Sol', '2,872.5 M km (19.2 UA)'],
+      ['Distancia media al Sol', '2,872.5 M km (19.2 UA)'],
       ['Año (órbita)', '84 años terrestres'],
       ['Rotación', '17 h 14 min, en sentido contrario'],
       ['Inclinación del eje', '97.8°'],
@@ -145,7 +145,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '49,244 km (3.9 × Tierra)'],
       ['Masa', '1.02 × 10²⁶ kg (17 × Tierra)'],
-      ['Distancia al Sol', '4,495 M km (30.1 UA)'],
+      ['Distancia media al Sol', '4,495 M km (30.1 UA)'],
       ['Año (órbita)', '164.8 años terrestres'],
       ['Rotación', '16 h 6 min'],
       ['Inclinación del eje', '28.3°'],
@@ -161,7 +161,7 @@ export const CUERPOS = {
     datos: [
       ['Diámetro', '2,377 km (0.19 × Tierra)'],
       ['Masa', '1.30 × 10²² kg (0.002 × Tierra)'],
-      ['Distancia al Sol', '5,906 M km (39.5 UA)'],
+      ['Distancia media al Sol', '5,906 M km (39.5 UA)'],
       ['Año (órbita)', '248 años terrestres'],
       ['Rotación', '6.4 días, en sentido contrario'],
       ['Inclinación del eje', '122.5°'],
@@ -171,4 +171,36 @@ export const CUERPOS = {
     extra: ['Caronte', 'Es tan grande respecto a Plutón (la mitad de su diámetro) que ambos giran alrededor de un punto que queda fuera de Plutón.'],
     distUA: 39.5
   }
+};
+
+// Estructura interna aproximada (modelos actuales): [nombre, radio exterior como fracción del radio total, color]
+export const CAPAS = {
+  sol: [['Núcleo (fusión nuclear)', 0.25, '#fff1a8'], ['Zona radiativa', 0.70, '#ffc861'], ['Zona convectiva', 1, '#ff8a3d']],
+  mercurio: [['Núcleo metálico', 0.83, '#c98b55'], ['Manto rocoso', 0.985, '#8c7a6b'], ['Corteza', 1, '#bdb6ad']],
+  venus: [['Núcleo de hierro', 0.5, '#d49a5a'], ['Manto rocoso', 0.99, '#a1675a'], ['Corteza', 1, '#d9b98a']],
+  tierra: [['Núcleo interno (sólido)', 0.19, '#ffd27a'], ['Núcleo externo (líquido)', 0.55, '#f09a3e'], ['Manto', 0.995, '#c0533a'], ['Corteza', 1, '#6f8fb5']],
+  marte: [['Núcleo líquido', 0.54, '#c97a47'], ['Manto', 0.985, '#9a4e33'], ['Corteza', 1, '#d0805a']],
+  jupiter: [['Núcleo difuso (roca y hielo)', 0.3, '#8a6a4a'], ['Hidrógeno metálico líquido', 0.8, '#b98d5e'], ['Hidrógeno y helio moleculares', 1, '#e2c49b']],
+  saturno: [['Núcleo difuso (roca y hielo)', 0.3, '#8a6a4a'], ['Hidrógeno metálico líquido', 0.5, '#c2a172'], ['Hidrógeno y helio moleculares', 1, '#ecd7a6']],
+  urano: [['Núcleo rocoso', 0.2, '#6d6a5c'], ['Manto de hielos (agua, amoníaco, metano)', 0.75, '#5fa8b4'], ['Atmósfera de hidrógeno y helio', 1, '#b4e2e6']],
+  neptuno: [['Núcleo rocoso', 0.25, '#6d6a5c'], ['Manto de hielos (agua, amoníaco, metano)', 0.8, '#3f6fc0'], ['Atmósfera de hidrógeno y helio', 1, '#7da0ec']],
+  pluton: [['Núcleo rocoso', 0.72, '#8a7765'], ['Océano de agua (probable)', 0.8, '#3d6d9c'], ['Corteza de hielo', 1, '#d8c8b2']]
+};
+
+// Datos de la Vía Láctea para la ficha
+export const GALAXIA = {
+  nombre: 'Vía Láctea', tipo: 'Galaxia espiral barrada',
+  desc: 'Nuestra galaxia es un disco de cientos de miles de millones de estrellas con una barra central y brazos espirales. El Sol está en el Brazo de Orión, una rama menor entre los brazos de Sagitario y Perseo, y tarda unos 230 millones de años en dar una vuelta al centro.',
+  datos: [
+    ['Diámetro del disco', '≈ 100,000 años luz'],
+    ['Estrellas', 'Entre 100,000 y 400,000 millones'],
+    ['Edad', '≈ 13,600 millones de años'],
+    ['Distancia del Sol al centro', '≈ 26,000 años luz'],
+    ['Velocidad del Sol', '≈ 230 km/s (828,000 km/h)'],
+    ['Año galáctico', '≈ 230 millones de años'],
+    ['Vueltas del Sol desde que nació', '≈ 20'],
+    ['Agujero negro central', 'Sagitario A*, ≈ 4 millones de masas solares'],
+    ['Plano del sistema solar', 'Inclinado ≈ 60° respecto al de la galaxia']
+  ],
+  extra: ['Sobre el modelo', 'La forma es una simplificación de los mapas actuales: desde dentro de la galaxia no podemos fotografiarla completa, así que su estructura se reconstruye midiendo distancias y velocidades de estrellas y nubes de gas.']
 };
