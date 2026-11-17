@@ -43,7 +43,7 @@ for clave, items in LISTA.items():
             ii = info(titulo, ancho)
         m = ii.get("extmetadata", {})
         url = ii["thumburl"]
-        archivo = f"{clave}/{n:02d}.jpg"
+        archivo = f"{clave}/{n:02d}.webp"
         ruta = os.path.join(SALIDA, archivo)
         if os.path.exists(ruta):
             img = Image.open(ruta)
@@ -57,7 +57,7 @@ for clave, items in LISTA.items():
             img = img.convert("RGB")
         if not os.path.exists(ruta):
             img.thumbnail((1280, 1280))
-            img.save(ruta, "JPEG", quality=84, optimize=True, progressive=True)
+            img.save(ruta, "WEBP", quality=80, method=6)
             time.sleep(5)
         autor = texto(m.get("Artist", {}).get("value"))[:160]
         salida[clave][-1] = ({

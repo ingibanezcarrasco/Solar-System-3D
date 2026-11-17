@@ -359,3 +359,16 @@ body.con-ficha .barra-sup { transform: translateX(calc(-50% - 60px)); }
 @media (max-width: 1500px) { body.con-ficha .dist > span { display: none; } }
 @media (max-width: 1180px) { body.con-ficha .fecha-sup { display: none; } }
 @media (max-width: 860px) { body.con-ficha .barra-sup { transform: none; } }
+
+/* Cielo desde aquí */
+.fila-btn.ancho { width: 100%; margin-top: 8px; }
+.selector { width: 100%; margin-top: 8px; background: var(--panel-2); color: var(--texto); border: 1px solid var(--borde, rgba(255,255,255,.08)); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 13px; }
+.fila-coord { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+.fila-coord label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--tenue); flex: 1; min-width: 0; }
+.fila-coord input { width: 100%; min-width: 0; background: var(--panel-2); color: var(--texto); border: 1px solid var(--borde, rgba(255,255,255,.08)); border-radius: 8px; padding: 6px; font: inherit; font-size: 13px; }
+#horaInput { flex: 1; min-width: 0; }
+.estado-cielo { color: var(--texto); margin: 0 0 8px; }
+#listaLocal li.bajo { opacity: .45; }
+.etiqueta.local { pointer-events: auto; cursor: pointer; }
+.etiqueta.cardinal { pointer-events: none; color: #9fd0b0; font-weight: 600; letter-spacing: .08em; background: none; }
+.etiqueta.cardinal::before { display: none; }

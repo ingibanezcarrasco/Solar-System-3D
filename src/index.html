@@ -24,7 +24,7 @@
       <input id="buscar" type="search" placeholder="Buscar" autocomplete="off" aria-label="Buscar un cuerpo celeste">
       <ul id="sugerencias" class="sugerencias" hidden></ul>
     </label>
-    <div class="dist"><span>Distancia al Sol</span><b id="distValor">—</b><small id="distUnidad"></small></div>
+    <div class="dist"><span id="distEtiqueta">Distancia al Sol</span><b id="distValor">—</b><small id="distUnidad"></small></div>
     <div class="dist fecha-sup"><span id="fechaEtiqueta">Fecha</span><b id="fechaSup">—</b></div>
   </div>
 
@@ -42,6 +42,10 @@
           VÍA LÁCTEA
         </button>
       </div>
+      <button id="btnCieloLocal" class="fila-btn ancho">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 18a6 6 0 0 1 12 0" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="7" r="1.1" fill="currentColor"/><circle cx="16" cy="5" r="1.1" fill="currentColor"/><circle cx="19" cy="10" r="0.9" fill="currentColor"/></svg>
+        CIELO DESDE AQUÍ
+      </button>
 
       <div class="seccion">
         <div class="seccion-tit"><span>TIEMPO</span><b id="velTexto">1 semana / s</b></div>
@@ -91,6 +95,14 @@
       </div>
 
       <div class="seccion">
+        <div class="seccion-tit"><span>RENDIMIENTO</span></div>
+        <div class="toggles una">
+          <button class="toggle" id="btnLigero">MODO LIGERO</button>
+        </div>
+        <p class="nota">Menos resolución, sin sombras y menos estrellas: para teléfonos o equipos lentos. Se activa solo en pantallas táctiles; al cambiarlo la página se recarga.</p>
+      </div>
+
+      <div class="seccion">
         <div class="seccion-tit"><span>ÍNDICE DE OBJETOS</span></div>
         <ul id="indice" class="indice"></ul>
       </div>
@@ -133,6 +145,57 @@
           <button class="toggle" id="velReal">VELOCIDAD REAL DEL SOL</button>
         </div>
         <p class="nota" id="notaHelice">Velocidad del Sol reducida 30 veces para que se vean las vueltas. Con la velocidad real (≈ 230 km/s, unas 48 UA por año) las hélices quedan casi rectas.</p>
+      </div>
+    </div>
+
+    <!-- Cielo desde un lugar de la Tierra -->
+    <div id="secLocal" hidden>
+      <button id="btnSalirLocal" class="fila-btn">← VOLVER AL SISTEMA SOLAR</button>
+      <div class="seccion">
+        <div class="seccion-tit"><span>UBICACIÓN</span><b id="ubicNombre">—</b></div>
+        <button id="btnGeo" class="fila-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.2" fill="currentColor"/></svg>
+          USAR MI UBICACIÓN
+        </button>
+        <select id="ciudades" class="selector" aria-label="Elegir una ciudad"></select>
+        <div class="fila-coord">
+          <label>Lat <input id="latIn" type="number" step="0.01" min="-90" max="90"></label>
+          <label>Lon <input id="lonIn" type="number" step="0.01" min="-180" max="180"></label>
+          <button id="btnCoord" class="chico">Ir</button>
+        </div>
+        <p class="nota" id="notaGeo">Tu ubicación solo se usa en este navegador para calcular el cielo; no se envía a ningún lado.</p>
+      </div>
+      <div class="seccion">
+        <div class="seccion-tit"><span>HORA</span><b id="velLocalTexto">Tiempo real</b></div>
+        <div class="rejilla4" id="velLocal">
+          <button data-v="0">❚❚</button>
+          <button data-v="0.0000115741" class="activo">Real</button>
+          <button data-v="0.00694444">10 min/s</button>
+          <button data-v="0.0416667">1 h/s</button>
+        </div>
+        <div class="fila-fecha">
+          <input id="horaInput" type="datetime-local" aria-label="Ir a una fecha y hora">
+          <button id="btnAhora" class="chico">Ahora</button>
+        </div>
+        <p class="nota">Hora del reloj de tu equipo.</p>
+      </div>
+      <div class="seccion">
+        <div class="seccion-tit"><span>EN EL CIELO</span></div>
+        <p class="nota estado-cielo" id="estadoCielo">—</p>
+        <ul id="listaLocal" class="indice"></ul>
+      </div>
+      <div class="seccion">
+        <div class="seccion-tit"><span>MOSTRAR</span></div>
+        <div class="toggles">
+          <button class="toggle activo" data-l="constelaciones">CONSTELACIONES</button>
+          <button class="toggle activo" data-l="nombresConst">NOMBRES</button>
+          <button class="toggle" data-l="ecliptica">ECLÍPTICA</button>
+        </div>
+        <div class="rejilla2" id="zoomLocal" style="margin-top:8px">
+          <button data-z="0.8">ACERCAR ＋</button>
+          <button data-z="1.25">ALEJAR −</button>
+        </div>
+        <p class="nota">Arrastra para mirar alrededor; rueda o pellizco para acercar. El Sol, la Luna y los planetas están en su posición real; la Luna va agrandada 3.5 veces y los planetas son puntos de brillo.</p>
       </div>
     </div>
 

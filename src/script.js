@@ -9,34 +9,35 @@ import { CUERPOS, ORDEN, ALIAS, CAPAS, GALAXIA } from './datos.js';
 import { ROTACION, posicionUA, puntosOrbitaUA, direccionEcuatorial, uaAEscena, distanciaCompacta, fechaAJD, jdAFecha, UA_REAL } from './orbitas.js';
 import { crearCielo } from './cielo.js';
 import { crearGalaxia, ANIO_GALACTICO } from './galaxia.js';
+import { crearCieloLocal, rumbo } from './cielolocal.js';
 
-import bgTexture1 from '/images/1.jpg';
-import bgTexture2 from '/images/2.jpg';
-import bgTexture3 from '/images/3.jpg';
-import bgTexture4 from '/images/4.jpg';
-import sunTexture from '/images/sun.jpg';
-import mercuryTexture from '/images/mercurymap.jpg';
-import mercuryBump from '/images/mercurybump.jpg';
-import venusTexture from '/images/venusmap.jpg';
-import venusAtmosphere from '/images/venus_atmosphere.jpg';
-import earthTexture from '/images/earth_daymap.jpg';
-import earthNightTexture from '/images/earth_nightmap.jpg';
-import earthAtmosphere from '/images/earth_atmosphere.jpg';
-import earthMoonTexture from '/images/moonmap.jpg';
-import earthMoonBump from '/images/moonbump.jpg';
-import marsTexture from '/images/marsmap.jpg';
-import marsBump from '/images/marsbump.jpg';
-import jupiterTexture from '/images/jupiter.jpg';
-import ioTexture from '/images/jupiterIo.jpg';
-import europaTexture from '/images/jupiterEuropa.jpg';
-import ganymedeTexture from '/images/jupiterGanymede.jpg';
-import callistoTexture from '/images/jupiterCallisto.jpg';
-import saturnTexture from '/images/saturnmap.jpg';
-import satRingTexture from '/images/saturn_ring.png';
-import uranusTexture from '/images/uranus.jpg';
-import uraRingTexture from '/images/uranus_ring.png';
-import neptuneTexture from '/images/neptune.jpg';
-import plutoTexture from '/images/plutomap.jpg';
+import bgTexture1 from '/images/1.webp';
+import bgTexture2 from '/images/2.webp';
+import bgTexture3 from '/images/3.webp';
+import bgTexture4 from '/images/4.webp';
+import sunTexture from '/images/sun.webp';
+import mercuryTexture from '/images/mercurymap.webp';
+import mercuryBump from '/images/mercurybump.webp';
+import venusTexture from '/images/venusmap.webp';
+import venusAtmosphere from '/images/venus_atmosphere.webp';
+import earthTexture from '/images/earth_daymap.webp';
+import earthNightTexture from '/images/earth_nightmap.webp';
+import earthAtmosphere from '/images/earth_atmosphere.webp';
+import earthMoonTexture from '/images/moonmap.webp';
+import earthMoonBump from '/images/moonbump.webp';
+import marsTexture from '/images/marsmap.webp';
+import marsBump from '/images/marsbump.webp';
+import jupiterTexture from '/images/jupiter.webp';
+import ioTexture from '/images/jupiterIo.webp';
+import europaTexture from '/images/jupiterEuropa.webp';
+import ganymedeTexture from '/images/jupiterGanymede.webp';
+import callistoTexture from '/images/jupiterCallisto.webp';
+import saturnTexture from '/images/saturnmap.webp';
+import satRingTexture from '/images/saturn_ring.webp';
+import uranusTexture from '/images/uranus.webp';
+import uraRingTexture from '/images/uranus_ring.webp';
+import neptuneTexture from '/images/neptune.webp';
+import plutoTexture from '/images/plutomap.webp';
 
 const $ = (id) => document.getElementById(id);
 const J2000 = 2451545.0;
@@ -49,7 +50,8 @@ const estado = {
   sentido: 1,
   escala: 0,                 // 0 compacta … 1 real (animado)
   escalaObjetivo: 0,
-  modo: 'sistema',           // 'sistema' | 'galaxia'
+  modo: 'sistema',           // 'sistema' | 'galaxia' | 'local'
+  velLocal: 1 / 86400,       // días por segundo en el cielo local (tiempo real)
   maPorSegundo: 10,          // millones de años por segundo (galaxia)
   aniosPorSegundo: 1         // años por segundo (hélice)
 };
@@ -59,7 +61,15 @@ const factorTam = () => THREE.MathUtils.lerp(1, TAM_REAL, estado.escala);
 const VISTA_COMPACTA = new THREE.Vector3(-175, 115, 5);
 const VISTA_REAL = new THREE.Vector3(-330, 240, 10);
 const vistaGeneralPos = (v = new THREE.Vector3()) => v.lerpVectors(VISTA_COMPACTA, VISTA_REAL, estado.escala);
-const SEGMENTOS = [64, 48];
+// Modo ligero: para teléfonos y equipos modestos (menos resolución, sin sombras, menos estrellas).
+// Se elige solo según el equipo; el interruptor del panel lo cambia y se recuerda en este navegador.
+const LIGERO = (() => {
+  try { const g = localStorage.getItem('modoLigero'); if (g !== null) return g === '1'; } catch { /* sin almacenamiento */ }
+  const tactil = matchMedia('(pointer: coarse)').matches;
+  const modesto = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  return tactil || modesto;
+})();
+const SEGMENTOS = LIGERO ? [40, 28] : [64, 48];
 
 // ******  ESCENA  ******
 const scene = new THREE.Scene();
@@ -67,7 +77,7 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.copy(VISTA_COMPACTA);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-const PR = Math.min(window.devicePixelRatio, 2);
+const PR = Math.min(window.devicePixelRatio, LIGERO ? 1.25 : 2);
 renderer.setPixelRatio(PR);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -91,7 +101,7 @@ const maxAniso = renderer.capabilities.getMaxAnisotropy();
 const tex = (url) => { const t = loadTexture.load(url); t.anisotropy = Math.min(8, maxAniso); return t; };
 
 // ******  POSTPROCESO  ******
-const nuevoObjetivo = () => new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { samples: 4, type: THREE.HalfFloatType });
+const nuevoObjetivo = () => new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { samples: LIGERO ? 0 : 4, type: THREE.HalfFloatType });
 const composer = new EffectComposer(renderer, nuevoObjetivo());
 composer.setPixelRatio(PR);
 composer.addPass(new RenderPass(scene, camera));
@@ -115,8 +125,10 @@ scene.background = fondoCubo;
 // Luz sin corte de distancia y caída suave: los planetas exteriores no quedan a oscuras
 const pointLight = new THREE.PointLight(0xFDFFD3, 130, 0, 0.9);
 scene.add(pointLight);
-renderer.shadowMap.enabled = true;
-pointLight.castShadow = true;
+// La sombra de una luz puntual dibuja la escena 6 veces: se actualiza cada 3 cuadros (y nunca en modo ligero)
+renderer.shadowMap.enabled = !LIGERO;
+renderer.shadowMap.autoUpdate = false;
+pointLight.castShadow = !LIGERO;
 pointLight.shadow.mapSize.set(2048, 2048);
 pointLight.shadow.camera.near = 1;   // el rango debe cubrir todo el sistema: fuera de él three.js sombrea todo
 pointLight.shadow.camera.far = 700;
@@ -295,29 +307,40 @@ actualizarOrbitas();
 // ******  ASTEROIDES  ******
 // Cinturón principal (2.2–3.3 UA) y cinturón de Kuiper (39.5–50 UA); giran según la 3.ª ley de Kepler.
 const asteroides = [];
+const _m = new THREE.Matrix4(), _p = new THREE.Vector3(), _e = new THREE.Vector3();
 function cargarAsteroides(path, cantidad, aMin, aMax) {
   new GLTFLoader().load(path, (gltf) => {
     gltf.scene.traverse((child) => {
       if (!child.isMesh) return;
-      for (let i = 0; i < cantidad / 12; i++) { // el paquete trae 12 asteroides
-        const m = child.clone();
+      // El paquete trae 12 rocas: una InstancedMesh por roca (un solo dibujo por tipo, no miles)
+      const n = Math.round(cantidad / 12 * (LIGERO ? 0.5 : 1));
+      const im = new THREE.InstancedMesh(child.geometry, child.material, n);
+      im.frustumCulled = false;
+      im.visible = mostrar.asteroides;
+      const lista = [];
+      for (let i = 0; i < n; i++) {
         const a = THREE.MathUtils.randFloat(aMin, aMax);
-        m.visible = mostrar.asteroides;
-        scene.add(m);
-        asteroides.push({ m, a, dc: distanciaCompacta(a), escala: THREE.MathUtils.randFloat(0.8, 1.2), fase: Math.random() * Math.PI * 2,
-          y: THREE.MathUtils.randFloatSpread(2), periodo: 365.25 * Math.pow(a, 1.5) });
+        lista.push({ a, dc: distanciaCompacta(a), escala: THREE.MathUtils.randFloat(0.8, 1.2), fase: Math.random() * Math.PI * 2,
+          y: THREE.MathUtils.randFloatSpread(2), periodo: 365.25 * Math.pow(a, 1.5),
+          q: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * 6.3, Math.random() * 6.3, 0)).multiply(child.quaternion) });
       }
+      scene.add(im);
+      asteroides.push({ im, lista });
     });
     actualizarAsteroides();
   });
 }
 function actualizarAsteroides() {
   const f = THREE.MathUtils.lerp(1, 0.3, estado.escala), dias = estado.jd - J2000;
-  for (const s of asteroides) {
-    const ang = s.fase + 2 * Math.PI * dias / s.periodo;
-    const r = THREE.MathUtils.lerp(s.dc, s.a * UA_REAL, estado.escala);
-    s.m.position.set(r * Math.cos(ang), s.y * f, -r * Math.sin(ang));
-    s.m.scale.setScalar(s.escala * f);
+  for (const { im, lista } of asteroides) {
+    lista.forEach((s, i) => {
+      const ang = s.fase + 2 * Math.PI * dias / s.periodo;
+      const r = THREE.MathUtils.lerp(s.dc, s.a * UA_REAL, estado.escala);
+      _p.set(r * Math.cos(ang), s.y * f, -r * Math.sin(ang));
+      _m.compose(_p, s.q, _e.setScalar(s.escala * f));
+      im.setMatrixAt(i, _m);
+    });
+    im.instanceMatrix.needsUpdate = true;
   }
 }
 
@@ -352,6 +375,9 @@ fetch('cielo.json').then(r => r.json()).then(datos => {
   cielo = crearCielo(datos, PR);
   cielo.grupo.visible = mostrar.constelaciones;
   scene.add(cielo.grupo);
+  local = crearCieloLocal(renderer, datos, { pr: PR, texLuna: tex(earthMoonTexture) });
+  aplicarUbicacion(leerUbicacion(), false);
+  if (localPendiente) entrarLocal();
 }).catch(e => console.error('No se pudo cargar el cielo', e));
 
 // ******  GALERÍA HISTÓRICA  ******
@@ -485,10 +511,18 @@ function crearCapa(contenedor) {
 const capaEtiquetas = crearCapa($('etiquetas'));
 const capaConst = crearCapa($('capaConst'));
 const capaGal = crearCapa($('etiquetas'));
+const capaLocal = crearCapa($('etiquetas'));
 const itemsPlanetas = ORDEN.map(k => ({ id: k, nombre: CUERPOS[k].nombre, pos: new THREE.Vector3(), click: () => enfocar(k) }));
 let itemsConst = null;
 
 function actualizarEtiquetas() {
+  if (estado.modo === 'local') {
+    capaEtiquetas.ocultar(); capaGal.ocultar();
+    capaLocal.pintar(local.etiquetas().map(e => e.tipo === 'cardinal' ? e : { ...e, tipo: e.tipo + ' local', click: () => local.mirar(e.id.slice(2)) }), local.camara);
+    if (mostrarLocal.nombresConst) capaConst.pintar(local.etiquetasConstelaciones(), local.camara); else capaConst.ocultar();
+    return;
+  }
+  capaLocal.ocultar();
   if (estado.modo === 'galaxia') {
     capaEtiquetas.ocultar(); capaConst.ocultar();
     capaGal.pintar(galaxia.etiquetas().map(e => ({ ...e, id: 'g-' + e.nombre })), galaxia.camara(), false);
@@ -633,6 +667,8 @@ function actualizarVivo(forzar = false) {
   const ahora = performance.now();
   if (!forzar && ahora - ultimoVivo < 200) return;
   ultimoVivo = ahora;
+  $('distEtiqueta').textContent = estado.modo === 'local' ? 'Hora' : 'Distancia al Sol';
+  if (estado.modo === 'local') { vivoLocal(); return; }
   const enGalaxia = estado.modo === 'galaxia';
   $('fechaSup').textContent = enGalaxia ? textoGalaxiaCorto() : fmtFecha.format(new Date(jdAFecha(estado.jd)));
   $('fechaEtiqueta').textContent = enGalaxia ? 'Tiempo' : 'Fecha';
@@ -672,6 +708,7 @@ $('btnVista').addEventListener('click', vistaGeneral);
 // Navegador anterior / siguiente
 const VISTAS_GAL = [['galaxia', 'La galaxia'], ['sol', 'El Sol en su brazo'], ['helice', 'Hélice de los planetas']];
 function mover(paso) {
+  if (estado.modo === 'local') { moverLocal(paso); return; }
   if (estado.modo === 'galaxia') {
     const i = VISTAS_GAL.findIndex(([v]) => v === galaxia.vista());
     ponerVistaGal(VISTAS_GAL[(i + paso + 3) % 3][0]);
@@ -706,6 +743,7 @@ window.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape') {
     if (document.body.classList.contains('sin-interfaz')) alternarInterfaz(false);
     else if (estado.modo === 'galaxia') salirGalaxia();
+    else if (estado.modo === 'local') salirLocal();
     else vistaGeneral();
   }
   else if (e.key === ' ' && estado.modo === 'sistema') { e.preventDefault(); ponerVelocidad(estado.diasPorSegundo === 0 ? 7 : 0); }
@@ -750,7 +788,7 @@ $('solBrillo').addEventListener('input', (e) => {
 // Interruptores de la escena
 function aplicarMostrar() {
   for (const k of PLANETAS) orbitas[k].linea.visible = mostrar.orbitas;
-  asteroides.forEach(a => { a.m.visible = mostrar.asteroides; });
+  asteroides.forEach(a => { a.im.visible = mostrar.asteroides; });
   lunasMallas.forEach(m => { m.visible = mostrar.lunas; });
   ejes.forEach(e => { e.visible = mostrar.ejes; });
   if (cielo) cielo.grupo.visible = mostrar.constelaciones;
@@ -758,12 +796,19 @@ function aplicarMostrar() {
   controls.autoRotate = mostrar.giro && !enfocado;
   bloomPass.enabled = mostrar.brillo;
 }
-document.querySelectorAll('#secSistema .toggle').forEach(b => {
+document.querySelectorAll('#secSistema .toggle[data-t]').forEach(b => {
   b.addEventListener('click', () => {
     mostrar[b.dataset.t] = !mostrar[b.dataset.t];
     b.classList.toggle('activo', mostrar[b.dataset.t]);
     aplicarMostrar();
   });
+});
+
+// Modo ligero (se aplica al recargar)
+$('btnLigero').classList.toggle('activo', LIGERO);
+$('btnLigero').addEventListener('click', () => {
+  try { localStorage.setItem('modoLigero', LIGERO ? '0' : '1'); } catch { /* sin almacenamiento */ }
+  location.reload();
 });
 
 // Plegar panel izquierdo
@@ -785,10 +830,11 @@ function coincidencias(q) {
   const alias = Object.entries(ALIAS).filter(([a]) => a.startsWith(q)).map(([, k]) => k);
   const propios = ORDEN.filter(k => normalizar(CUERPOS[k].nombre).includes(q) || k.startsWith(q));
   const gal = ['via lactea', 'galaxia', 'milky way'].some(n => n.startsWith(q)) ? ['galaxia'] : [];
-  return [...new Set([...propios, ...alias, ...gal])];
+  const cie = ['cielo desde aqui', 'cielo', 'estrellas', 'mi cielo'].some(n => n.startsWith(q)) ? ['cielo'] : [];
+  return [...new Set([...propios, ...alias, ...gal, ...cie])];
 }
-const nombreDe = (k) => k === 'galaxia' ? 'Vía Láctea' : CUERPOS[k].nombre;
-const tipoDe = (k) => k === 'galaxia' ? 'Galaxia' : CUERPOS[k].tipo.split(' (')[0];
+const nombreDe = (k) => k === 'galaxia' ? 'Vía Láctea' : k === 'cielo' ? 'Cielo desde aquí' : CUERPOS[k].nombre;
+const tipoDe = (k) => k === 'galaxia' ? 'Galaxia' : k === 'cielo' ? 'Vista' : CUERPOS[k].tipo.split(' (')[0];
 function pintarSugerencias() {
   const lista = coincidencias(buscador.value);
   sugerencias.replaceChildren();
@@ -802,7 +848,7 @@ function pintarSugerencias() {
   sugerencias.hidden = lista.length === 0;
 }
 function elegir(k) {
-  if (k === 'galaxia') entrarGalaxia(); else enfocar(k);
+  if (k === 'galaxia') entrarGalaxia(); else if (k === 'cielo') entrarLocal(); else enfocar(k);
   buscador.value = ''; sugerencias.hidden = true; buscador.blur();
 }
 buscador.addEventListener('input', () => { seleccion = 0; pintarSugerencias(); });
@@ -824,7 +870,7 @@ function ajustarVista() {
 }
 
 // ******  VÍA LÁCTEA  ******
-const galaxia = crearGalaxia(renderer);
+const galaxia = crearGalaxia(renderer, { ligero: LIGERO, pr: PR });
 const composerGal = new EffectComposer(renderer, nuevoObjetivo());
 composerGal.setPixelRatio(PR);
 const passGal = new RenderPass(galaxia.escena(), galaxia.camara());
@@ -906,10 +952,173 @@ $('heliceGal').addEventListener('click', () => {
   galaxia.mostrarEstela(on);
 });
 
+// ******  CIELO DESDE AQUÍ  ******
+let local = null, localPendiente = false;
+const mostrarLocal = { constelaciones: true, nombresConst: true, ecliptica: false };
+const CIUDADES = [
+  ['Ciudad de México', 19.43, -99.13], ['Guadalajara', 20.67, -103.35], ['Monterrey', 25.69, -100.32], ['Mérida', 20.97, -89.62],
+  ['Tijuana', 32.51, -117.04], ['Cancún', 21.16, -86.85], ['Bogotá', 4.71, -74.07], ['Lima', -12.05, -77.04], ['Quito (ecuador)', -0.18, -78.47],
+  ['Santiago de Chile', -33.45, -70.67], ['Buenos Aires', -34.60, -58.38], ['Madrid', 40.42, -3.70], ['Nueva York', 40.71, -74.01],
+  ['Tokio', 35.68, 139.69], ['Sídney', -33.87, 151.21], ['Reikiavik', 64.15, -21.94], ['Polo Norte', 90, 0], ['Polo Sur', -90, 0]
+];
+const UBIC_DEF = { nombre: 'Ciudad de México', lat: 19.43, lon: -99.13 };
+function leerUbicacion() {
+  try { const u = JSON.parse(localStorage.getItem('ubicacion')); if (u && Number.isFinite(u.lat) && Number.isFinite(u.lon)) return u; } catch { /* sin almacenamiento */ }
+  return UBIC_DEF;
+}
+function aplicarUbicacion(u, guardar = true) {
+  if (!local) return;
+  local.ponerUbicacion(u.lat, u.lon);
+  $('ubicNombre').textContent = u.nombre;
+  $('latIn').value = u.lat.toFixed(2); $('lonIn').value = u.lon.toFixed(2);
+  const i = CIUDADES.findIndex(([n]) => n === u.nombre);
+  $('ciudades').value = i >= 0 ? String(i) : '';
+  if (guardar) try { localStorage.setItem('ubicacion', JSON.stringify(u)); } catch { /* sin almacenamiento */ }
+  actualizarVivo(true);
+}
+$('ciudades').innerHTML = '<option value="">Elegir una ciudad…</option>' + CIUDADES.map(([n], i) => `<option value="${i}">${n}</option>`).join('');
+$('ciudades').addEventListener('change', (e) => {
+  const c = CIUDADES[Number(e.target.value)];
+  if (c) aplicarUbicacion({ nombre: c[0], lat: c[1], lon: c[2] });
+});
+$('btnCoord').addEventListener('click', () => {
+  const lat = Number($('latIn').value), lon = Number($('lonIn').value);
+  if (Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180)
+    aplicarUbicacion({ nombre: `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? 'E' : 'O'}`, lat, lon });
+});
+$('btnGeo').addEventListener('click', () => {
+  if (!navigator.geolocation) { $('notaGeo').textContent = 'Este navegador no permite obtener la ubicación; elige una ciudad o escribe las coordenadas.'; return; }
+  $('notaGeo').textContent = 'Buscando tu ubicación…';
+  navigator.geolocation.getCurrentPosition((p) => {
+    // Se redondea a 2 decimales (~1 km): sobra para el cielo
+    const lat = Math.round(p.coords.latitude * 100) / 100, lon = Math.round(p.coords.longitude * 100) / 100;
+    aplicarUbicacion({ nombre: 'Mi ubicación', lat, lon });
+    $('notaGeo').textContent = 'Tu ubicación solo se usa en este navegador para calcular el cielo; no se envía a ningún lado.';
+  }, () => { $('notaGeo').textContent = 'No se pudo obtener la ubicación (permiso denegado o sin señal). Elige una ciudad o escribe las coordenadas.'; },
+  { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+});
+
+// Hora
+const TEXTO_VEL_LOCAL = { 0: 'En pausa', 0.0000115741: 'Tiempo real', 0.00694444: '10 min / s', 0.0416667: '1 hora / s' };
+rejillaVel('velLocal', (v) => { estado.velLocal = v; $('velLocalTexto').textContent = TEXTO_VEL_LOCAL[v] || ''; });
+const aEntradaLocal = (ms) => { const d = new Date(ms); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
+$('horaInput').addEventListener('change', (e) => { const ms = new Date(e.target.value).getTime(); if (!Number.isNaN(ms)) { estado.jd = fechaAJD(ms); actualizarVivo(true); } });
+$('btnAhora').addEventListener('click', () => { estado.jd = fechaAJD(Date.now()); actualizarVivo(true); });
+
+// Mostrar
+document.querySelectorAll('#secLocal .toggle[data-l]').forEach(b => {
+  b.addEventListener('click', () => {
+    mostrarLocal[b.dataset.l] = !mostrarLocal[b.dataset.l];
+    b.classList.toggle('activo', mostrarLocal[b.dataset.l]);
+    local?.mostrar(mostrarLocal);
+  });
+});
+$('zoomLocal').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b && local) local.zoom(Number(b.dataset.z)); });
+renderer.domElement.addEventListener('wheel', (e) => {
+  if (estado.modo !== 'local') return;
+  e.preventDefault();
+  local.zoom(e.deltaY > 0 ? 1.08 : 1 / 1.08);
+}, { passive: false });
+// Pellizco con dos dedos
+const toques = new Map();
+let distPellizco = 0;
+renderer.domElement.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') toques.set(e.pointerId, e); });
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (estado.modo !== 'local' || !toques.has(e.pointerId)) return;
+  toques.set(e.pointerId, e);
+  if (toques.size !== 2) { distPellizco = 0; return; }
+  const [a, b] = [...toques.values()], d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  if (distPellizco) local.zoom(distPellizco / d);
+  distPellizco = d;
+});
+const finToque = (e) => { toques.delete(e.pointerId); distPellizco = 0; };
+renderer.domElement.addEventListener('pointerup', finToque);
+renderer.domElement.addEventListener('pointercancel', finToque);
+
+function estadoDelCielo() {
+  const h = local.info.solAlt;
+  const cielo = h > 0 ? 'De día: el Sol no deja ver las estrellas (aquí se ven tenues como referencia)'
+    : h > -6 ? 'Crepúsculo: empiezan a verse los planetas y las estrellas más brillantes'
+    : h > -12 ? 'Crepúsculo náutico: ya se ven muchas estrellas'
+    : h > -18 ? 'Casi de noche' : 'Noche cerrada';
+  const il = local.info.iluminacion, cr = local.info.creciente;
+  const fase = il < 0.03 ? 'Luna nueva' : il > 0.97 ? 'Luna llena' : Math.abs(il - 0.5) < 0.06 ? (cr ? 'Cuarto creciente' : 'Cuarto menguante')
+    : il < 0.5 ? (cr ? 'Luna creciente' : 'Luna menguante') : (cr ? 'Luna gibosa creciente' : 'Luna gibosa menguante');
+  return `${cielo}. ${fase} (${Math.round(il * 100)} % iluminada).`;
+}
+const listaLocal = $('listaLocal');
+let objetoNav = -1;
+function vivoLocal() {
+  const fecha = new Date(jdAFecha(estado.jd));
+  $('fechaEtiqueta').textContent = 'Fecha';
+  $('fechaSup').textContent = fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
+  $('distValor').textContent = fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  $('distUnidad').textContent = '';
+  if (document.activeElement !== $('horaInput')) $('horaInput').value = aEntradaLocal(fecha.getTime());
+  if (!local) return;
+  $('estadoCielo').textContent = estadoDelCielo();
+  const objs = [...local.objetos()].sort((a, b) => (b.alt > 0) - (a.alt > 0) || b.alt - a.alt);
+  listaLocal.replaceChildren(...objs.map(o => {
+    const li = document.createElement('li');
+    li.classList.toggle('bajo', o.alt < 0);
+    const donde = o.alt < 0 ? 'bajo el horizonte' : `${Math.round(o.alt)}° · ${rumbo(o.az)}${o.telescopio ? ' · telescopio' : ''}`;
+    const color = o.clave === 'sol' ? '#ffd36b' : o.clave === 'luna' ? '#d8d8d8' : CUERPOS[o.clave]?.color || '#ccc';
+    li.innerHTML = `<span class="punto" style="background:${color}"></span>${o.nombre}<small>${donde}</small>`;
+    li.addEventListener('click', () => { local.mirar(o.clave); $('navNombre').textContent = o.nombre; if (window.innerWidth < 860) plegarPanel(true); });
+    return li;
+  }));
+}
+function moverLocal(paso) {
+  const objs = local.objetos().filter(o => o.alt > 0);
+  if (!objs.length) return;
+  objetoNav = (objetoNav + paso + objs.length) % objs.length;
+  local.mirar(objs[objetoNav].clave);
+  $('navNombre').textContent = objs[objetoNav].nombre;
+}
+
+function entrarLocal() {
+  if (!local) { localPendiente = true; return; }
+  localPendiente = false;
+  if (estado.modo === 'galaxia') salirGalaxia({ sinVista: true });
+  estado.modo = 'local';
+  controls.enabled = false;
+  galaxia.controlesActivos(false);
+  local.controles.enabled = true;
+  outlinePass.selectedObjects = [];
+  $('secSistema').hidden = true; $('secGalaxia').hidden = true; $('secLocal').hidden = false;
+  $('marca').textContent = 'CIELO DESDE AQUÍ';
+  ocultarFicha();
+  estado.jd = fechaAJD(Date.now());
+  local.mostrar(mostrarLocal);
+  local.actualizar(estado.jd);
+  // Mirar hacia el ecuador celeste (al sur en el hemisferio norte) o al planeta más alto si es de noche
+  const { lat } = local.ubicacion();
+  const visibles = local.objetos().filter(o => o.alt > 10 && o.clave !== 'sol');
+  if (local.info.solAlt < -6 && visibles.length) local.mirar(visibles.sort((a, b) => b.alt - a.alt)[0].clave);
+  else local.mirarRumbo(lat >= 0 ? 180 : 0, 35);
+  $('navNombre').textContent = 'Cielo desde aquí';
+  history.replaceState(null, '', '#cielo');
+  actualizarVivo(true);
+}
+function salirLocal({ sinVista = false } = {}) {
+  estado.modo = 'sistema';
+  local.controles.enabled = false;
+  controls.enabled = true;
+  capaLocal.ocultar(); capaConst.ocultar();
+  $('secSistema').hidden = false; $('secLocal').hidden = true;
+  $('marca').textContent = 'SISTEMA SOLAR';
+  if (!sinVista) { vistaGeneral(); history.replaceState(null, '', location.pathname); }
+  actualizarVivo(true);
+}
+$('btnCieloLocal').addEventListener('click', entrarLocal);
+$('btnSalirLocal').addEventListener('click', () => salirLocal());
+
 // Enlaces directos: #saturno, #saturn, #via-lactea…
 function leerHash() {
   const h = normalizar(decodeURIComponent(location.hash.slice(1)));
-  if (['via-lactea', 'galaxia', 'milky-way'].includes(h)) { if (estado.modo !== 'galaxia') entrarGalaxia(); return; }
+  if (['via-lactea', 'galaxia', 'milky-way'].includes(h)) { if (estado.modo === 'local') salirLocal({ sinVista: true }); if (estado.modo !== 'galaxia') entrarGalaxia(); return; }
+  if (['cielo', 'cielo-local', 'sky'].includes(h)) { if (estado.modo === 'galaxia') salirGalaxia({ sinVista: true }); if (estado.modo !== 'local') entrarLocal(); return; }
+  if (estado.modo === 'local') salirLocal({ sinVista: true });
   const k = CUERPOS[h] ? h : ALIAS[h];
   if (k) enfocar(k, { actualizarHash: false });
 }
@@ -917,12 +1126,22 @@ window.addEventListener('hashchange', leerHash);
 
 // ******  ANIMACIÓN  ******
 let ultimo = performance.now();
+let cuadro = 0;
 function animate() {
   requestAnimationFrame(animate);
   const ahora = performance.now();
   const dtReal = Math.min(ahora - ultimo, 100);
   ultimo = ahora;
 
+  if (estado.modo === 'local') {
+    estado.jd += dtReal / 1000 * estado.velLocal;
+    local.actualizar(estado.jd);
+    local.animar();
+    actualizarEtiquetas();
+    actualizarVivo();
+    renderer.render(local.escena, local.camara);
+    return;
+  }
   if (estado.modo === 'galaxia') {
     galaxia.actualizar(dtReal, estado.maPorSegundo, estado.aniosPorSegundo);
     passGal.scene = galaxia.escena();
@@ -956,6 +1175,7 @@ function animate() {
     else renderer.domElement.style.cursor = '';
   }
 
+  if (!LIGERO && ++cuadro % 3 === 0) renderer.shadowMap.needsUpdate = true;
   actualizarCamara();
   controls.update();
   if (cielo) cielo.grupo.position.copy(camera.position);
@@ -983,4 +1203,5 @@ window.addEventListener('resize', () => {
   composerGal.setSize(w, h);
   outlinePass.setSize(w, h);
   galaxia.redimensionar(w, h);
+  if (local) local.redimensionar(w, h);
 });
