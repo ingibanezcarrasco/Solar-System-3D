@@ -24,7 +24,7 @@ const BRAZOS = [ // fase, estrellas, nombre (en el orden en que quedan hacia el 
 const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
 const radioBrazo = (fase, theta) => R_INICIO * Math.exp(K * (theta - fase - PSI));
 
-function crearDisco(pixelRatio) {
+function crearDisco(pixelRatio, f = 1) {
   const pos = [], col = [], tam = [];
   const add = (x, y, z, c, s) => { pos.push(x, y, z); col.push(...c); tam.push(s * pixelRatio); };
   const azul = [0.62, 0.74, 1.0], blanco = [0.9, 0.9, 1.0], rosa = [1.0, 0.42, 0.62], amarillo = [1.0, 0.82, 0.56], naranja = [1.0, 0.7, 0.45];
@@ -32,7 +32,7 @@ function crearDisco(pixelRatio) {
   // Brazos
   for (const b of BRAZOS) {
     const tMax = Math.log(R_MAX / R_INICIO) / K;
-    for (let i = 0; i < b.n; i++) {
+    for (let i = 0; i < b.n * f; i++) {
       const u = Math.pow(Math.random(), 0.8) * tMax;
       const th = b.fase + PSI + u;
       const r = radioBrazo(b.fase, th);
@@ -44,7 +44,7 @@ function crearDisco(pixelRatio) {
     }
   }
   // Disco de fondo (exponencial)
-  for (let i = 0; i < 22000; i++) {
+  for (let i = 0; i < 22000 * f; i++) {
     const r = -Math.log(1 - Math.random() * 0.995) * 120;
     if (r > R_MAX) continue;
     const t = Math.random() * Math.PI * 2, f = 0.12 + Math.random() * 0.18;
@@ -52,14 +52,14 @@ function crearDisco(pixelRatio) {
   }
   // Barra central (orientada como los extremos de los brazos mayores)
   const cb = Math.cos(PSI), sb = Math.sin(PSI);
-  for (let i = 0; i < 16000; i++) {
+  for (let i = 0; i < 16000 * f; i++) {
     const a = gauss() * 48, b = gauss() * 14, y = gauss() * 9;
     const x = a * cb - b * sb, z = -(a * sb + b * cb);
     const f = 0.5 + Math.random() * 0.5;
     add(x, y, z, (Math.random() < 0.5 ? amarillo : naranja).map(v => v * f), 1 + Math.random() * 1.5);
   }
   // Bulbo
-  for (let i = 0; i < 22000; i++) {
+  for (let i = 0; i < 22000 * f; i++) {
     const r = Math.abs(gauss()) * 26, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
     const f = 0.55 + Math.random() * 0.45;
     add(r * Math.sin(p) * Math.cos(t), r * Math.cos(p) * 0.6, r * Math.sin(p) * Math.sin(t), amarillo.map(v => v * f), 1 + Math.random() * 1.5);
@@ -98,8 +98,7 @@ function brillo(color, tamano) {
   return s;
 }
 
-export function crearGalaxia(renderer) {
-  const pr = Math.min(window.devicePixelRatio, 2);
+export function crearGalaxia(renderer, { ligero = false, pr = Math.min(window.devicePixelRatio, 2) } = {}) {
   const escena = new THREE.Scene();
   escena.background = new THREE.Color(0x000000);
   const camara = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 6000);
@@ -117,7 +116,7 @@ export function crearGalaxia(renderer) {
 
   // Disco (gira como patrón)
   const disco = new THREE.Group();
-  disco.add(crearDisco(pr));
+  disco.add(crearDisco(pr, ligero ? 0.5 : 1));
   const nucleo = brillo('rgba(255,200,140,0.55)', 80);
   disco.add(nucleo);
   escena.add(disco);

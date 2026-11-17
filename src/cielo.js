@@ -20,7 +20,8 @@ function colorBV(bv) {
   return TABLA_BV[TABLA_BV.length - 1][1];
 }
 
-export function crearCielo(datos, pixelRatio) {
+// `dir` convierte (AR, Dec) en una dirección: por defecto, a los ejes eclípticos de la escena.
+export function crearCielo(datos, pixelRatio, dir = direccionEcuatorial, escalaTam = 1) {
   const grupo = new THREE.Group();
   grupo.renderOrder = -1;
   const v = new THREE.Vector3();
@@ -29,11 +30,11 @@ export function crearCielo(datos, pixelRatio) {
   const n = datos.estrellas.length;
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3), tam = new Float32Array(n);
   datos.estrellas.forEach(([ra, dec, mag, bv], i) => {
-    direccionEcuatorial(ra, dec, v).multiplyScalar(RADIO);
+    dir(ra, dec, v).multiplyScalar(RADIO);
     pos.set([v.x, v.y, v.z], i * 3);
     const brillo = THREE.MathUtils.clamp(1.35 - (mag + 1.5) * 0.11, 0.4, 1.4);
     col.set(colorBV(bv).map(c => c * brillo), i * 3);
-    tam[i] = THREE.MathUtils.clamp(6.5 - mag * 0.8, 2, 8.5) * pixelRatio;
+    tam[i] = THREE.MathUtils.clamp(6.5 - mag * 0.8, 2, 8.5) * pixelRatio * escalaTam;
   });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
@@ -43,9 +44,10 @@ export function crearCielo(datos, pixelRatio) {
     vertexShader: `
       attribute float tam; varying vec3 vColor;
       void main() { vColor = color; gl_PointSize = tam; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    uniforms: { opacidad: { value: 1 } },
     fragmentShader: `
-      varying vec3 vColor;
-      void main() { float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.0, d); gl_FragColor = vec4(vColor * a, a); }`,
+      uniform float opacidad; varying vec3 vColor;
+      void main() { float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.0, d) * opacidad; gl_FragColor = vec4(vColor * a, a); }`,
     vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
   });
   const estrellas = new THREE.Points(geo, mat);
@@ -57,7 +59,7 @@ export function crearCielo(datos, pixelRatio) {
   for (const tramo of datos.lineas) {
     for (let i = 1; i < tramo.length; i++) {
       for (const [ra, dec] of [tramo[i - 1], tramo[i]]) {
-        direccionEcuatorial(ra, dec, v).multiplyScalar(RADIO * 0.999);
+        dir(ra, dec, v).multiplyScalar(RADIO * 0.999);
         seg.push(v.x, v.y, v.z);
       }
     }
@@ -70,7 +72,7 @@ export function crearCielo(datos, pixelRatio) {
 
   // Puntos de anclaje para los nombres (direcciones unitarias)
   const nombres = datos.nombres.map(([nombre, ra, dec, rango]) => ({
-    nombre: nombre.replace(/\u2005/g, ' '), rango, dir: direccionEcuatorial(ra, dec, new THREE.Vector3())
+    nombre: nombre.replace(/\u2005/g, ' '), rango, dir: dir(ra, dec, new THREE.Vector3())
   }));
 
   return { grupo, estrellas, lineas, nombres, RADIO };

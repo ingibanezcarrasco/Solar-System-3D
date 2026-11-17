@@ -1,7 +1,7 @@
 {
  "sol": [
   {
-   "archivo": "galeria/sol/01.jpg",
+   "archivo": "galeria/sol/01.webp",
    "anio": "1612",
    "titulo": "Manchas solares de Galileo",
    "desc": "Galileo proyectó la imagen del Sol con su telescopio y dibujó las manchas día tras día; al verlas moverse dedujo que el Sol gira.",
@@ -13,7 +13,7 @@
    "alto": 800
   },
   {
-   "archivo": "galeria/sol/02.jpg",
+   "archivo": "galeria/sol/02.webp",
    "anio": "1845",
    "titulo": "Primera fotografía del Sol",
    "desc": "Daguerrotipo de Hippolyte Fizeau y Léon Foucault, del 2 de abril de 1845. Ya se distinguen algunas manchas.",
@@ -25,7 +25,7 @@
    "alto": 450
   },
   {
-   "archivo": "galeria/sol/03.jpg",
+   "archivo": "galeria/sol/03.webp",
    "anio": "1859",
    "titulo": "El dibujo de Carrington",
    "desc": "Richard Carrington dibujaba este grupo de manchas cuando vio el primer destello solar registrado; horas después llegó la mayor tormenta geomagnética conocida.",
@@ -37,7 +37,7 @@
    "alto": 830
   },
   {
-   "archivo": "galeria/sol/04.jpg",
+   "archivo": "galeria/sol/04.webp",
    "anio": "2010",
    "titulo": "Observatorio de Dinámica Solar (SDO)",
    "desc": "Desde 2010 el SDO de la NASA fotografía el Sol completo cada pocos segundos en varias longitudes de onda del ultravioleta.",
@@ -49,7 +49,7 @@
    "alto": 1024
   },
   {
-   "archivo": "galeria/sol/05.jpg",
+   "archivo": "galeria/sol/05.webp",
    "anio": "2020",
    "titulo": "Telescopio solar Inouye",
    "desc": "La primera luz del mayor telescopio solar del mundo (Hawái) mostró las celdas de convección de la superficie, cada una del tamaño de un país.",
@@ -63,7 +63,7 @@
  ],
  "mercurio": [
   {
-   "archivo": "galeria/mercurio/01.jpg",
+   "archivo": "galeria/mercurio/01.webp",
    "anio": "1934",
    "titulo": "Mapa de Antoniadi",
    "desc": "Eugène Antoniadi dibujó este mapa observando con telescopio desde la Tierra; Mercurio es tan pequeño y cercano al Sol que casi no se le distinguen detalles.",
@@ -75,7 +75,7 @@
    "alto": 557
   },
   {
-   "archivo": "galeria/mercurio/02.jpg",
+   "archivo": "galeria/mercurio/02.webp",
    "anio": "1974",
    "titulo": "Mariner 10",
    "desc": "La primera sonda en visitar Mercurio fotografió menos de la mitad de su superficie en tres sobrevuelos.",
@@ -87,7 +87,7 @@
    "alto": 272
   },
   {
-   "archivo": "galeria/mercurio/03.jpg",
+   "archivo": "galeria/mercurio/03.webp",
    "anio": "2008",
    "titulo": "MESSENGER, primer sobrevuelo",
    "desc": "MESSENGER fotografió por primera vez el hemisferio que Mariner 10 no había visto.",
@@ -99,7 +99,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/mercurio/04.jpg",
+   "archivo": "galeria/mercurio/04.webp",
    "anio": "2013",
    "titulo": "MESSENGER en órbita",
    "desc": "Mosaico global hecho con miles de fotos de MESSENGER, la primera sonda que orbitó Mercurio (2011–2015).",
@@ -111,7 +111,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/mercurio/05.jpg",
+   "archivo": "galeria/mercurio/05.webp",
    "anio": "2024",
    "titulo": "BepiColombo",
    "desc": "La misión europea-japonesa BepiColombo durante uno de los sobrevuelos que la frenan para entrar en órbita.",
@@ -125,7 +125,7 @@
  ],
  "venus": [
   {
-   "archivo": "galeria/venus/01.jpg",
+   "archivo": "galeria/venus/01.webp",
    "anio": "1610",
    "titulo": "Las fases de Venus",
    "desc": "Galileo vio que Venus tiene fases como la Luna y cambia de tamaño: una prueba clave de que gira alrededor del Sol y no de la Tierra.",
@@ -137,7 +137,7 @@
    "alto": 869
   },
   {
-   "archivo": "galeria/venus/02.jpg",
+   "archivo": "galeria/venus/02.webp",
    "anio": "1974",
    "titulo": "Mariner 10",
    "desc": "Imagen en ultravioleta que revela los patrones de las nubes, invisibles en luz visible.",
@@ -149,7 +149,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/venus/03.jpg",
+   "archivo": "galeria/venus/03.webp",
    "anio": "1982",
    "titulo": "Venera 13 en la superficie",
    "desc": "La sonda soviética Venera 13 aterrizó y envió fotos en color del suelo antes de sucumbir al calor y la presión, unas dos horas después.",
@@ -161,7 +161,7 @@
    "alto": 277
   },
   {
-   "archivo": "galeria/venus/04.jpg",
+   "archivo": "galeria/venus/04.webp",
    "anio": "1990",
    "titulo": "Sonda Galileo",
    "desc": "La sonda Galileo pasó junto a Venus camino de Júpiter y fotografió su capa de nubes.",
@@ -173,7 +173,7 @@
    "alto": 959
   },
   {
-   "archivo": "galeria/venus/05.jpg",
+   "archivo": "galeria/venus/05.webp",
    "anio": "1991",
    "titulo": "Radar de Magellan",
    "desc": "Magellan cartografió con radar el 98 % de la superficie a través de las nubes; los colores son simulados.",
@@ -187,7 +187,7 @@
  ],
  "tierra": [
   {
-   "archivo": "galeria/tierra/01.jpg",
+   "archivo": "galeria/tierra/01.webp",
    "anio": "1609",
    "titulo": "La Luna de Galileo",
    "desc": "Galileo dibujó montañas y cráteres en la Luna, lo que contradecía la idea de cuerpos celestes perfectos.",
@@ -199,7 +199,7 @@
    "alto": 816
   },
   {
-   "archivo": "galeria/tierra/02.jpg",
+   "archivo": "galeria/tierra/02.webp",
    "anio": "1840",
    "titulo": "Primera foto de la Luna",
    "desc": "Daguerrotipo de John W. Draper en Nueva York, una de las primeras fotografías astronómicas.",
@@ -211,7 +211,7 @@
    "alto": 1243
   },
   {
-   "archivo": "galeria/tierra/03.jpg",
+   "archivo": "galeria/tierra/03.webp",
    "anio": "1946",
    "titulo": "Primera foto desde el espacio",
    "desc": "Tomada por una cámara a bordo de un cohete V-2 lanzado desde Nuevo México, a unos 105 km de altura.",
@@ -223,7 +223,7 @@
    "alto": 1012
   },
   {
-   "archivo": "galeria/tierra/04.jpg",
+   "archivo": "galeria/tierra/04.webp",
    "anio": "1968",
    "titulo": "Salida de la Tierra",
    "desc": "William Anders, del Apolo 8, fotografió la Tierra asomando sobre el horizonte de la Luna.",
@@ -235,7 +235,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/tierra/05.jpg",
+   "archivo": "galeria/tierra/05.webp",
    "anio": "1972",
    "titulo": "La canica azul",
    "desc": "La tripulación del Apolo 17 fotografió la Tierra completamente iluminada a unos 29,000 km de distancia.",
@@ -247,7 +247,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/tierra/06.jpg",
+   "archivo": "galeria/tierra/06.webp",
    "anio": "1990",
    "titulo": "Un punto azul pálido",
    "desc": "Voyager 1 se dio la vuelta a unos 6,000 millones de km y fotografió la Tierra como un punto diminuto en un rayo de luz.",
@@ -259,7 +259,7 @@
    "alto": 447
   },
   {
-   "archivo": "galeria/tierra/07.jpg",
+   "archivo": "galeria/tierra/07.webp",
    "anio": "2015",
    "titulo": "DSCOVR desde L1",
    "desc": "La cámara EPIC observa la cara iluminada de la Tierra desde 1.5 millones de km, entre la Tierra y el Sol.",
@@ -273,7 +273,7 @@
  ],
  "marte": [
   {
-   "archivo": "galeria/marte/01.jpg",
+   "archivo": "galeria/marte/01.webp",
    "anio": "1659",
    "titulo": "Dibujo de Huygens",
    "desc": "Christiaan Huygens dibujó la mancha oscura Syrtis Major; al seguirla calculó que el día marciano dura unas 24 horas.",
@@ -285,7 +285,7 @@
    "alto": 566
   },
   {
-   "archivo": "galeria/marte/02.jpg",
+   "archivo": "galeria/marte/02.webp",
    "anio": "1888",
    "titulo": "Mapa de Schiaparelli",
    "desc": "Schiaparelli llamó «canali» (canales) a unas líneas que creyó ver; la mala traducción alimentó la idea de marcianos constructores.",
@@ -297,7 +297,7 @@
    "alto": 868
   },
   {
-   "archivo": "galeria/marte/03.jpg",
+   "archivo": "galeria/marte/03.webp",
    "anio": "1911",
    "titulo": "Los canales de Lowell",
    "desc": "Percival Lowell dibujó una red de canales que atribuyó a una civilización. Las sondas demostraron que eran ilusiones ópticas.",
@@ -309,7 +309,7 @@
    "alto": 599
   },
   {
-   "archivo": "galeria/marte/04.jpg",
+   "archivo": "galeria/marte/04.webp",
    "anio": "1965",
    "titulo": "Mariner 4",
    "desc": "La primera foto de cerca de otro planeta mostró un Marte con cráteres, sin canales.",
@@ -321,7 +321,7 @@
    "alto": 1016
   },
   {
-   "archivo": "galeria/marte/05.jpg",
+   "archivo": "galeria/marte/05.webp",
    "anio": "1976",
    "titulo": "Viking 1 en la superficie",
    "desc": "La primera foto tomada desde el suelo de Marte, minutos después del aterrizaje: el pie de la nave y las rocas.",
@@ -333,7 +333,7 @@
    "alto": 341
   },
   {
-   "archivo": "galeria/marte/06.jpg",
+   "archivo": "galeria/marte/06.webp",
    "anio": "1980",
    "titulo": "Valles Marineris",
    "desc": "Mosaico de las sondas Viking con el gran sistema de cañones, de unos 4,000 km de largo.",
@@ -345,7 +345,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/marte/07.jpg",
+   "archivo": "galeria/marte/07.webp",
    "anio": "2003",
    "titulo": "Hubble en la gran oposición",
    "desc": "En agosto de 2003 Marte pasó a la menor distancia de la Tierra en casi 60,000 años.",
@@ -357,7 +357,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/marte/08.jpg",
+   "archivo": "galeria/marte/08.webp",
    "anio": "2021",
    "titulo": "Perseverance en Jezero",
    "desc": "El rover explora el cráter Jezero, un antiguo lago, buscando señales de vida microbiana pasada.",
@@ -371,7 +371,7 @@
  ],
  "jupiter": [
   {
-   "archivo": "galeria/jupiter/01.jpg",
+   "archivo": "galeria/jupiter/01.webp",
    "anio": "1610",
    "titulo": "Las lunas de Galileo",
    "desc": "Galileo anotó noche tras noche la posición de cuatro «estrellas» junto a Júpiter y entendió que giraban a su alrededor.",
@@ -383,7 +383,7 @@
    "alto": 767
   },
   {
-   "archivo": "galeria/jupiter/02.jpg",
+   "archivo": "galeria/jupiter/02.webp",
    "anio": "1979",
    "titulo": "Voyager 1",
    "desc": "Las Voyager revelaron la complejidad de las nubes de Júpiter, un anillo tenue y volcanes activos en Ío.",
@@ -395,7 +395,7 @@
    "alto": 1081
   },
   {
-   "archivo": "galeria/jupiter/03.jpg",
+   "archivo": "galeria/jupiter/03.webp",
    "anio": "1979",
    "titulo": "La Gran Mancha Roja",
    "desc": "Una tormenta anticiclónica más grande que la Tierra, observada desde hace al menos 190 años.",
@@ -407,7 +407,7 @@
    "alto": 474
   },
   {
-   "archivo": "galeria/jupiter/04.jpg",
+   "archivo": "galeria/jupiter/04.webp",
    "anio": "2000",
    "titulo": "Cassini",
    "desc": "Retrato en color natural tomado por la sonda Cassini cuando pasó junto a Júpiter camino de Saturno.",
@@ -419,7 +419,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/jupiter/05.jpg",
+   "archivo": "galeria/jupiter/05.webp",
    "anio": "2017",
    "titulo": "Juno sobre el polo sur",
    "desc": "Juno descubrió que los polos están cubiertos de ciclones del tamaño de continentes.",
@@ -431,7 +431,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/jupiter/06.jpg",
+   "archivo": "galeria/jupiter/06.webp",
    "anio": "2022",
    "titulo": "Telescopio James Webb",
    "desc": "Imagen en infrarrojo con auroras en los polos, los anillos tenues y dos lunas pequeñas.",
@@ -445,7 +445,7 @@
  ],
  "saturno": [
   {
-   "archivo": "galeria/saturno/01.jpg",
+   "archivo": "galeria/saturno/01.webp",
    "anio": "1659",
    "titulo": "Saturno antes de entender los anillos",
    "desc": "Dibujos de distintos astrónomos recopilados por Huygens. Galileo lo vio en 1610 como un planeta «con orejas»; Huygens explicó que era un anillo.",
@@ -457,7 +457,7 @@
    "alto": 475
   },
   {
-   "archivo": "galeria/saturno/02.jpg",
+   "archivo": "galeria/saturno/02.webp",
    "anio": "1979",
    "titulo": "Pioneer 11",
    "desc": "La primera sonda en llegar a Saturno descubrió el anillo F.",
@@ -469,7 +469,7 @@
    "alto": 352
   },
   {
-   "archivo": "galeria/saturno/03.jpg",
+   "archivo": "galeria/saturno/03.webp",
    "anio": "1981",
    "titulo": "Voyager",
    "desc": "Saturno con sus lunas Rea y Dione, fotografiados por una de las sondas Voyager en su aproximación.",
@@ -481,7 +481,7 @@
    "alto": 960
   },
   {
-   "archivo": "galeria/saturno/04.jpg",
+   "archivo": "galeria/saturno/04.webp",
    "anio": "2012",
    "titulo": "Cassini a contraluz",
    "desc": "Con el Sol detrás del planeta, los anillos brillan y se ven anillos tenues difíciles de observar.",
@@ -493,7 +493,7 @@
    "alto": 595
   },
   {
-   "archivo": "galeria/saturno/05.jpg",
+   "archivo": "galeria/saturno/05.webp",
    "anio": "2016",
    "titulo": "Cassini y el hexágono",
    "desc": "Mosaico de Cassini con la corriente en chorro de forma hexagonal en el polo norte.",
@@ -505,7 +505,7 @@
    "alto": 651
   },
   {
-   "archivo": "galeria/saturno/06.jpg",
+   "archivo": "galeria/saturno/06.webp",
    "anio": "2023",
    "titulo": "Telescopio James Webb",
    "desc": "En el infrarrojo el planeta se ve oscuro (el metano absorbe esa luz) y los anillos de hielo brillan.",
@@ -519,7 +519,7 @@
  ],
  "urano": [
   {
-   "archivo": "galeria/urano/01.jpg",
+   "archivo": "galeria/urano/01.webp",
    "anio": "1781",
    "titulo": "El telescopio de Herschel",
    "desc": "Réplica del telescopio con el que William Herschel descubrió Urano, el primer planeta hallado con telescopio.",
@@ -531,7 +531,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/urano/02.jpg",
+   "archivo": "galeria/urano/02.webp",
    "anio": "1986",
    "titulo": "Voyager 2",
    "desc": "La única sonda que ha visitado Urano lo vio como una esfera azul verdosa casi sin detalles.",
@@ -543,7 +543,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/urano/03.jpg",
+   "archivo": "galeria/urano/03.webp",
    "anio": "1998",
    "titulo": "Hubble en infrarrojo",
    "desc": "Imagen en falso color con nubes brillantes y los anillos, al acercarse el equinoccio de Urano.",
@@ -555,7 +555,7 @@
    "alto": 462
   },
   {
-   "archivo": "galeria/urano/04.jpg",
+   "archivo": "galeria/urano/04.webp",
    "anio": "2012",
    "titulo": "Auroras de Urano",
    "desc": "Hubble captó auroras en Urano, combinadas aquí con una imagen de Voyager 2.",
@@ -567,7 +567,7 @@
    "alto": 1083
   },
   {
-   "archivo": "galeria/urano/05.jpg",
+   "archivo": "galeria/urano/05.webp",
    "anio": "2023",
    "titulo": "Telescopio James Webb",
    "desc": "Webb muestra en infrarrojo los anillos y la capa brillante sobre el polo que mira al Sol.",
@@ -581,7 +581,7 @@
  ],
  "neptuno": [
   {
-   "archivo": "galeria/neptuno/01.jpg",
+   "archivo": "galeria/neptuno/01.webp",
    "anio": "1846",
    "titulo": "El mapa del descubrimiento",
    "desc": "Con esta carta estelar Johann Galle encontró Neptuno en la posición que había calculado Urbain Le Verrier.",
@@ -593,7 +593,7 @@
    "alto": 595
   },
   {
-   "archivo": "galeria/neptuno/02.jpg",
+   "archivo": "galeria/neptuno/02.webp",
    "anio": "1989",
    "titulo": "Voyager 2",
    "desc": "La única visita a Neptuno mostró la Gran Mancha Oscura, una tormenta del tamaño de la Tierra que luego desapareció.",
@@ -605,7 +605,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/neptuno/03.jpg",
+   "archivo": "galeria/neptuno/03.webp",
    "anio": "2011",
    "titulo": "Las cuatro caras de Neptuno",
    "desc": "Hubble lo fotografió en 2011, al completar su primera órbita desde que fue descubierto.",
@@ -617,7 +617,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/neptuno/04.jpg",
+   "archivo": "galeria/neptuno/04.webp",
    "anio": "2020",
    "titulo": "Nuevas manchas oscuras",
    "desc": "Hubble sigue la aparición y desaparición de tormentas oscuras en su atmósfera.",
@@ -629,7 +629,7 @@
    "alto": 960
   },
   {
-   "archivo": "galeria/neptuno/05.jpg",
+   "archivo": "galeria/neptuno/05.webp",
    "anio": "2022",
    "titulo": "Telescopio James Webb",
    "desc": "La vista más clara de sus anillos desde la Voyager 2.",
@@ -643,7 +643,7 @@
  ],
  "pluton": [
   {
-   "archivo": "galeria/pluton/01.jpg",
+   "archivo": "galeria/pluton/01.webp",
    "anio": "1930",
    "titulo": "Las placas del descubrimiento",
    "desc": "Clyde Tombaugh comparó dos placas fotográficas tomadas con días de diferencia y encontró un punto que se había movido: Plutón.",
@@ -655,7 +655,7 @@
    "alto": 792
   },
   {
-   "archivo": "galeria/pluton/02.jpg",
+   "archivo": "galeria/pluton/02.webp",
    "anio": "1978",
    "titulo": "Descubrimiento de Caronte",
    "desc": "James Christy notó un abultamiento en las fotos de Plutón que resultó ser su luna Caronte.",
@@ -667,7 +667,7 @@
    "alto": 969
   },
   {
-   "archivo": "galeria/pluton/03.jpg",
+   "archivo": "galeria/pluton/03.webp",
    "anio": "1996",
    "titulo": "Primer mapa con Hubble",
    "desc": "Hubble obtuvo los primeros mapas burdos del brillo de la superficie.",
@@ -679,7 +679,7 @@
    "alto": 636
   },
   {
-   "archivo": "galeria/pluton/04.jpg",
+   "archivo": "galeria/pluton/04.webp",
    "anio": "2010",
    "titulo": "Hubble, las caras de Plutón",
    "desc": "Mapas más detallados que mostraron cambios de color y brillo con el tiempo.",
@@ -691,7 +691,7 @@
    "alto": 716
   },
   {
-   "archivo": "galeria/pluton/05.jpg",
+   "archivo": "galeria/pluton/05.webp",
    "anio": "2015",
    "titulo": "New Horizons",
    "desc": "La sonda reveló la llanura de hielo en forma de corazón (Tombaugh Regio) y montañas de hielo de agua.",
@@ -703,7 +703,7 @@
    "alto": 1280
   },
   {
-   "archivo": "galeria/pluton/06.jpg",
+   "archivo": "galeria/pluton/06.webp",
    "anio": "2015",
    "titulo": "Atmósfera azul",
    "desc": "Al alejarse, New Horizons vio a contraluz capas de bruma azul en la tenue atmósfera de Plutón.",
