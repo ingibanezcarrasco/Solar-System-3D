@@ -899,6 +899,13 @@ $('velReal').addEventListener('click', () => {
     : 'Velocidad del Sol reducida 30 veces para que se vean las vueltas. Con la velocidad real (≈ 230 km/s, unas 48 UA por año) las hélices quedan casi rectas.';
 });
 
+$('heliceGal').addEventListener('click', () => {
+  const on = !$('heliceGal').classList.contains('activo');
+  $('heliceGal').classList.toggle('activo', on);
+  $('notaHeliceGal').hidden = !on;
+  galaxia.mostrarEstela(on);
+});
+
 // Enlaces directos: #saturno, #saturn, #via-lactea…
 function leerHash() {
   const h = normalizar(decodeURIComponent(location.hash.slice(1)));

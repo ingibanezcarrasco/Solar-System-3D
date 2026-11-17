@@ -154,6 +154,63 @@ export function crearGalaxia(renderer) {
     return destino.set(R_SOL * Math.cos(ang), 2.5 * Math.sin(2 * Math.PI * t / 70 + 0.26), -R_SOL * Math.sin(ang));
   }
 
+  // ---------- Hélice de los planetas dentro de la galaxia ----------
+  // A escala real el sistema solar (≈ 0.001 años luz) sería invisible aquí, así que se dibuja
+  // aumentado y con vueltas simbólicas: cada planeta deja una estela que sigue el camino real del
+  // Sol en los últimos VENTANA millones de años, con el plano orbital inclinado 60° al galáctico.
+  const VENTANA = 8, M = 700;
+  const INCL = THREE.MathUtils.degToRad(60);
+  const PLAN_GAL = [ // nombre, a (UA), periodo (años), color
+    ['Mercurio', 0.387, 0.2408, 0xb8b0a5], ['Venus', 0.723, 0.6152, 0xe8c78e], ['Tierra', 1, 1, 0x5b93d6], ['Marte', 1.524, 1.8808, 0xd0703f],
+    ['Júpiter', 5.203, 11.862, 0xd8ad7c], ['Saturno', 9.537, 29.457, 0xe6cd92], ['Urano', 19.19, 84.02, 0xa6dbe0], ['Neptuno', 30.07, 164.8, 0x5a7ee6]
+  ];
+  const estela = new THREE.Group();
+  escena.add(estela);
+  const estelas = PLAN_GAL.map(([nombre, a, periodo, color], i) => {
+    const pos = new Float32Array(M * 3), col = new Float32Array(M * 3), c = new THREE.Color(color);
+    for (let k = 0; k < M; k++) { const f = Math.pow(1 - k / (M - 1), 1.3); col.set([c.r * f, c.g * f, c.b * f], k * 3); }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const linea = new THREE.Line(g, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    linea.frustumCulled = false;
+    estela.add(linea);
+    const punto = new THREE.Mesh(new THREE.SphereGeometry(i < 4 ? 0.35 : 0.6, 12, 8), new THREE.MeshBasicMaterial({ color }));
+    estela.add(punto);
+    return {
+      nombre, pos, g, punto,
+      r: 1.6 * Math.sqrt(a),                              // radio aumentado
+      vueltas: 3 * Math.pow(164.8 / periodo, 0.35),       // vueltas simbólicas en la ventana
+      giro: 0.6 * Math.pow(1 / periodo, 0.35),            // giro visual (rad/s) al avanzar el tiempo
+      fase: i * 1.7
+    };
+  });
+  const pS = new THREE.Vector3(), pS2 = new THREE.Vector3(), T = new THREE.Vector3(), Rr = new THREE.Vector3(),
+    n = new THREE.Vector3(), e2 = new THREE.Vector3(), ARRIBA = new THREE.Vector3(0, 1, 0);
+  let giroAcum = 0;
+
+  function actualizarEstela(dtReal, enMarcha) {
+    if (!estela.visible) return;
+    if (enMarcha) giroAcum += dtReal / 1000;
+    for (let k = 0; k < M; k++) {
+      const s = k / (M - 1), t = tiempo - VENTANA * s;
+      posicionSol(t, pS); posicionSol(t + 0.01, pS2);
+      T.subVectors(pS2, pS).normalize();                  // dirección del movimiento
+      Rr.crossVectors(T, ARRIBA).normalize();             // dirección radial
+      n.copy(ARRIBA).multiplyScalar(Math.cos(INCL)).addScaledVector(T, Math.sin(INCL)); // normal del plano orbital
+      e2.crossVectors(n, Rr).normalize();
+      for (const e of estelas) {
+        const ang = e.fase + e.giro * giroAcum * 6 - 2 * Math.PI * e.vueltas * s;
+        const x = pS.x + e.r * (Math.cos(ang) * Rr.x + Math.sin(ang) * e2.x);
+        const y = pS.y + e.r * (Math.cos(ang) * Rr.y + Math.sin(ang) * e2.y);
+        const z = pS.z + e.r * (Math.cos(ang) * Rr.z + Math.sin(ang) * e2.z);
+        e.pos[k * 3] = x; e.pos[k * 3 + 1] = y; e.pos[k * 3 + 2] = z;
+        if (k === 0) e.punto.position.set(x, y, z);
+      }
+    }
+    for (const e of estelas) e.g.attributes.position.needsUpdate = true;
+  }
+
   // ---------- Vista hélice ----------
   const helice = crearHelice(renderer, pr);
 
@@ -175,7 +232,7 @@ export function crearGalaxia(renderer) {
       posicionSol(tiempo, tmp);
       siguiendo = true; volando = true;
       destinoObj.copy(tmp);
-      destinoCam.copy(tmp).add(new THREE.Vector3(tmp.x * 0.12 + 30, 38, tmp.z * 0.12 + 50));
+      destinoCam.copy(tmp).add(estela.visible ? new THREE.Vector3(tmp.x * 0.05 + 6, 14, tmp.z * 0.05 + 30) : new THREE.Vector3(tmp.x * 0.12 + 30, 38, tmp.z * 0.12 + 50));
       controles.minDistance = 3;
       previo.copy(tmp);
     }
@@ -186,6 +243,8 @@ export function crearGalaxia(renderer) {
     tiempo += dtReal / 1000 * millonesPorSegundo;
     disco.rotation.y = -(2 * Math.PI / ANIO_GALACTICO) * PATRON * tiempo;
     posicionSol(tiempo, sol.position);
+    solBrillo.scale.setScalar(estela.visible ? (vista === 'sol' ? 4 : 12) : 22);
+    actualizarEstela(dtReal, millonesPorSegundo !== 0);
     const delta = tmp.copy(sol.position).sub(previo);
     previo.copy(sol.position);
     if (volando) {
@@ -204,6 +263,9 @@ export function crearGalaxia(renderer) {
     if (vista === 'helice') return helice.etiquetas();
     const lista = anclas.map(a => ({ nombre: a.nombre, pos: a.obj.getWorldPosition(new THREE.Vector3()), tipo: 'brazo' }));
     lista.push({ nombre: 'Sol · estás aquí', pos: sol.position.clone(), tipo: 'sol' });
+    if (estela.visible && vista === 'sol') {
+      for (const e of estelas.slice(4)) lista.push({ nombre: e.nombre, pos: e.punto.position.clone(), tipo: 'planeta' });
+    }
     return lista;
   }
 
@@ -218,6 +280,7 @@ export function crearGalaxia(renderer) {
     tiempo: () => tiempo,
     reiniciar: () => { tiempo = 0; helice.reiniciar(); },
     vista: () => vista,
+    mostrarEstela(b) { estela.visible = b; },
     redimensionar(w, h) {
       for (const c of [camara, helice.camara]) { c.aspect = w / h; c.updateProjectionMatrix(); }
     },
